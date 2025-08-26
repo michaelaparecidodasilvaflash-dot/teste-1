@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loja de Itens - Alfa: O Despertar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #2b2f3a, #1a1e27);
+            color: #e2e8f0;
+            padding: 2rem;
+        }
+        .container {
+            background: rgba(45, 55, 72, 0.7);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            max-width: 900px;
+            margin: 2rem auto;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .header-content h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #fbd38d;
+            text-shadow: 0 0 8px rgba(251, 211, 141, 0.4);
+        }
+        .nav-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            background-color: #4a5568;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        .nav-button:hover {
+            background-color: #fbd38d;
+            color: #2d3748;
+            transform: translateY(-2px);
+        }
+        .generator-section, .filters-section {
+            margin-top: 2rem;
+            background-color: #2d3748;
+            padding: 2rem;
+            border-radius: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .generator-section h2, .filters-section h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #fbd38d;
+            margin-bottom: 1rem;
+        }
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #1a202c;
+            border: 1px solid #4a5568;
+            border-radius: 0.5rem;
+            color: #e2e8f0;
+        }
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        .generate-button {
+            background-color: #38b2ac;
+            color: white;
+            padding: 0.75rem 2rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            cursor: pointer;
+        }
+        .generate-button:hover {
+            background-color: #319795;
+        }
+        .item-list {
+            display: grid;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        .item-card {
+            background-color: #4a5568;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .item-card h3 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            color: #fbd38d;
+            margin-bottom: 0.5rem;
+        }
+        .item-card p {
+            margin-bottom: 0.5rem;
+        }
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #fbd38d;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .collapsible-header {
+            font-family: 'Cinzel', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #fbd38d;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .collapsible-content {
+            display: none;
+            overflow: hidden;
+            transition: max-height 0.3s ease-in-out;
+        }
+        .collapsible-content.active {
+            display: grid;
+            gap: 1.5rem;
+        }
+        .item-card .item-details {
+            display: flex;
+            gap: 1.5rem;
+        }
+        .item-card img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 0.5rem;
+        }
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); z-index: 1000;
+            display: none; justify-content: center; align-items: center;
+        }
+        .modal-content {
+            background: #2d3748; border-radius: 12px;
+            padding: 24px; width: 90%; max-width: 600px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-content h3 {
+            font-family: 'Cinzel', serif;
+            color: #fbd38d;
+            margin-top: 0;
+            margin-bottom: 1rem;
+        }
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-content">
+            <h1>Loja de Itens</h1>
+            <a href="index.html" class="nav-button">Voltar ao Início</a>
+        </div>
+        
+        <div class="generator-section">
+            <h2>Gerador de Itens</h2>
+            <div class="input-group">
+                <label for="item-description">Descrição do Item:</label>
+                <textarea id="item-description" placeholder="Ex: Uma espada mágica com uma gema vermelha que emana calor."></textarea>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="input-group">
+                    <label for="item-level">Nível do Item (1-6):</label>
+                    <select id="item-level">
+                        <option value="1">Nível 1</option>
+                        <option value="2">Nível 2</option>
+                        <option value="3">Nível 3</option>
+                        <option value="4">Nível 4</option>
+                        <option value="5">Nível 5</option>
+                        <option value="6">Nível 6</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="item-category">Categoria do Item:</label>
+                    <select id="item-category">
+                        <option value="Ataque">Ataque</option>
+                        <option value="Defesa">Defesa</option>
+                        <option value="Suporte">Suporte</option>
+                    </select>
+                </div>
+            </div>
+            <button id="generate-item-btn" class="generate-button">Gerar Item</button>
+            <div id="loading-area" class="mt-4" style="display: none;">
+                <div class="loading-spinner"></div>
+                <p class="text-sm mt-2 text-gray-400">Gerando item, aguarde...</p>
+            </div>
+        </div>
+
+        <div id="generated-item-section" style="display: none;">
+            <h2 class="mt-8">Item Gerado</h2>
+            <div id="item-output" class="item-card">
+                </div>
+            <div class="flex items-center gap-2 mt-4">
+                <button id="add-item-to-catalog-btn" class="generate-button">Adicionar ao Catálogo</button>
+                <button id="download-generated-item-pdf" class="generate-button bg-gray-600">Baixar PDF</button>
+            </div>
+        </div>
+        
+        <div class="filters-section">
+            <h2>Catálogo de Itens</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="input-group">
+                    <label for="search-item">Buscar por Nome</label>
+                    <input type="text" id="search-item" placeholder="Ex: Espada Flamejante...">
+                </div>
+                <div class="input-group">
+                    <label for="filter-level">Filtrar por Nível</label>
+                    <select id="filter-level">
+                        <option value="">Todos</option>
+                        <option value="1">Nível 1</option>
+                        <option value="2">Nível 2</option>
+                        <option value="3">Nível 3</option>
+                        <option value="4">Nível 4</option>
+                        <option value="5">Nível 5</option>
+                        <option value="6">Nível 6</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="filter-category">Filtrar por Categoria</label>
+                    <select id="filter-category">
+                        <option value="">Todas</option>
+                        <option value="Ataque">Ataque</option>
+                        <option value="Defesa">Defesa</option>
+                        <option value="Suporte">Suporte</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div id="item-catalog">
+            </div>
+    </div>
+    
+    <div id="edit-item-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h3>Editar Item</h3>
+            <div class="input-group">
+                <label for="edit-item-name">Nome:</label>
+                <input type="text" id="edit-item-name">
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="input-group">
+                    <label for="edit-item-level">Nível:</label>
+                    <input type="number" id="edit-item-level" min="1" max="6">
+                </div>
+                <div class="input-group">
+                    <label for="edit-item-category">Categoria:</label>
+                    <select id="edit-item-category">
+                        <option value="Ataque">Ataque</option>
+                        <option value="Defesa">Defesa</option>
+                        <option value="Suporte">Suporte</option>
+                    </select>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="input-group">
+                    <label for="edit-item-uses">Usos:</label>
+                    <input type="number" id="edit-item-uses" min="0">
+                </div>
+                <div class="input-group">
+                    <label for="edit-item-bonus">Bônus (+xD6):</label>
+                    <input type="number" id="edit-item-bonus" min="0">
+                </div>
+            </div>
+            <div class="input-group">
+                <label for="edit-item-history">História:</label>
+                <textarea id="edit-item-history"></textarea>
+            </div>
+            <div class="input-group">
+                <label for="edit-item-effect">Efeito:</label>
+                <textarea id="edit-item-effect"></textarea>
+            </div>
+             <div class="input-group">
+                <label for="edit-item-image-upload">Mudar Imagem (opcional):</label>
+                <input type="file" id="edit-item-image-upload" accept="image/*" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-gray-700 file:text-fbd38d hover:file:bg-gray-600">
+            </div>
+            <div class="modal-actions">
+                <button id="save-item-edit-btn" class="generate-button">Salvar</button>
+                <button id="cancel-item-edit-btn" class="generate-button bg-gray-600">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let itemCatalog = [];
+        let generatedItemData = null;
+        let editingItemName = null;
+
+        async function initializeCatalog() {
+            const localData = localStorage.getItem('itemCatalog');
+            if (localData) {
+                itemCatalog = JSON.parse(localData);
+            } else {
+                try {
+                    const response = await fetch('itens.json');
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const data = await response.json();
+                    console.log("Itens carregados com sucesso:", data); // Para depuração
+                    itemCatalog = data;
+                    localStorage.setItem('itemCatalog', JSON.stringify(itemCatalog));
+                } catch (error) {
+                    console.error("Não foi possível carregar o catálogo de itens do JSON:", error);
+                    document.getElementById('item-catalog').innerHTML = `<p class="text-red-400 text-center mt-8">Erro ao carregar itens. Verifique o console (F12) para mais detalhes.</p>`;
+                }
+            }
+            renderItemList();
+        }
+
+        function renderItemList() {
+            const listContainer = document.getElementById('item-catalog');
+            listContainer.innerHTML = '';
+
+            const searchTerm = document.getElementById('search-item').value.toLowerCase();
+            const selectedLevel = document.getElementById('filter-level').value;
+            const selectedCategory = document.getElementById('filter-category').value;
+
+            const filteredItems = itemCatalog.filter(item => {
+                const matchesSearch = item.name.toLowerCase().includes(searchTerm);
+                const matchesLevel = !selectedLevel || item.level == selectedLevel;
+                const matchesCategory = !selectedCategory || item.category === selectedCategory;
+                return matchesSearch && matchesLevel && matchesCategory;
+            });
+
+            const itemsByLevel = filteredItems.reduce((acc, item) => {
+                acc[item.level] = acc[item.level] || {};
+                acc[item.level][item.category] = acc[item.level][item.category] || [];
+                acc[item.level][item.category].push(item);
+                return acc;
+            }, {});
+
+            if (Object.keys(itemsByLevel).length === 0) {
+                 listContainer.innerHTML = `<p class="text-center text-gray-400 mt-8">Nenhum item encontrado com os filtros selecionados.</p>`;
+                 return;
+            }
+
+            Object.keys(itemsByLevel).sort((a, b) => a - b).forEach(level => {
+                const levelSection = document.createElement('div');
+                levelSection.className = 'collapsible-header';
+                levelSection.innerHTML = `<h3>Nível ${level}</h3><span>▼</span>`;
+
+                const levelItemsList = document.createElement('div');
+                levelItemsList.className = 'collapsible-content item-list';
+
+                const categories = ['Ataque', 'Defesa', 'Suporte'];
+                categories.forEach(category => {
+                    if (itemsByLevel[level][category] && itemsByLevel[level][category].length > 0) {
+                        const categoryTitle = document.createElement('h4');
+                        categoryTitle.className = 'text-lg font-bold text-gray-300 col-span-full';
+                        categoryTitle.textContent = `Categoria: ${category}`;
+                        levelItemsList.appendChild(categoryTitle);
+                        
+                        itemsByLevel[level][category].forEach(item => {
+                            const itemCard = document.createElement('div');
+                            itemCard.className = 'item-card';
+                            itemCard.innerHTML = `
+                                <div class="item-details">
+                                    <img src="${item.image || 'https://placehold.co/150x150'}" alt="Imagem do item" class="item-image">
+                                    <div>
+                                        <h4 class="font-bold text-lg text-fbd38d">${item.name}</h4>
+                                        <p class="text-sm text-gray-300"><strong>Usos:</strong> ${item.uses} | <strong>Bônus:</strong> +${item.bonus}D6</p>
+                                        <p class="text-xs mt-2 text-gray-400"><strong>História:</strong> ${item.history}</p>
+                                        <p class="text-xs mt-2 text-gray-400"><strong>Efeito:</strong> ${item.effect}</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2 mt-4">
+                                    <button class="generate-button" onclick="editItem('${item.name}')">Editar</button>
+                                    <button class="generate-button bg-blue-500" onclick="downloadItemPdf('${item.name}')">Baixar PDF</button>
+                                </div>
+                            `;
+                            levelItemsList.appendChild(itemCard);
+                        });
+                    }
+                });
+                
+                if (levelItemsList.hasChildNodes()) {
+                    listContainer.appendChild(levelSection);
+                    listContainer.appendChild(levelItemsList);
+
+                    levelSection.addEventListener('click', () => {
+                        levelItemsList.classList.toggle('active');
+                        levelSection.querySelector('span').innerText = levelItemsList.classList.contains('active') ? '▲' : '▼';
+                    });
+                }
+            });
+        }
+        
+        async function generateItem() {
+            // *** CORREÇÃO: Função de IA temporariamente desativada para evitar erros. ***
+            alert("A funcionalidade de gerar itens com IA está temporariamente desativada. Para reativá-la, insira uma chave de API válida no código do arquivo loja.html.");
+            return;
+
+            /* CÓDIGO ORIGINAL (COMENTADO)
+            const description = document.getElementById('item-description').value;
+            const level = document.getElementById('item-level').value;
+            const category = document.getElementById('item-category').value;
+            const outputDiv = document.getElementById('item-output');
+            const loadingArea = document.getElementById('loading-area');
+            const generatedSection = document.getElementById('generated-item-section');
+
+            if (!description) {
+                alert('Por favor, insira uma descrição para o item.');
+                return;
+            }
+
+            loadingArea.style.display = 'block';
+            generatedSection.style.display = 'none';
+
+            // ... (resto do código da API) ...
+            */
+        }
+        
+        function addItemToCatalog() {
+            if (generatedItemData) {
+                if (itemCatalog.some(item => item.name.toLowerCase() === generatedItemData.name.toLowerCase())) {
+                    alert('Um item com este nome já existe no catálogo.');
+                    return;
+                }
+                itemCatalog.push(generatedItemData);
+                localStorage.setItem('itemCatalog', JSON.stringify(itemCatalog));
+                alert('Item adicionado ao catálogo!');
+                generatedItemData = null;
+                document.getElementById('generated-item-section').style.display = 'none';
+                renderItemList();
+            }
+        }
+
+        function editItem(itemName) {
+            const item = itemCatalog.find(i => i.name === itemName);
+            if (!item) return;
+
+            editingItemName = itemName;
+            document.getElementById('edit-item-name').value = item.name;
+            document.getElementById('edit-item-level').value = item.level;
+            document.getElementById('edit-item-category').value = item.category;
+            document.getElementById('edit-item-uses').value = item.uses;
+            document.getElementById('edit-item-bonus').value = item.bonus;
+            document.getElementById('edit-item-history').value = item.history;
+            document.getElementById('edit-item-effect').value = item.effect;
+
+            document.getElementById('edit-item-modal').style.display = 'flex';
+        }
+
+        document.getElementById('save-item-edit-btn').addEventListener('click', () => {
+            const itemIndex = itemCatalog.findIndex(i => i.name === editingItemName);
+            if (itemIndex === -1) return;
+
+            const updatedItem = {
+                name: document.getElementById('edit-item-name').value,
+                level: parseInt(document.getElementById('edit-item-level').value),
+                category: document.getElementById('edit-item-category').value,
+                uses: parseInt(document.getElementById('edit-item-uses').value),
+                bonus: parseInt(document.getElementById('edit-item-bonus').value),
+                history: document.getElementById('edit-item-history').value,
+                effect: document.getElementById('edit-item-effect').value
+            };
+
+            const imageFile = document.getElementById('edit-item-image-upload').files[0];
+            if (imageFile) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    updatedItem.image = e.target.result;
+                    itemCatalog[itemIndex] = updatedItem;
+                    localStorage.setItem('itemCatalog', JSON.stringify(itemCatalog));
+                    document.getElementById('edit-item-modal').style.display = 'none';
+                    renderItemList();
+                };
+                reader.readAsDataURL(imageFile);
+            } else {
+                updatedItem.image = itemCatalog[itemIndex].image;
+                itemCatalog[itemIndex] = updatedItem;
+                localStorage.setItem('itemCatalog', JSON.stringify(itemCatalog));
+                document.getElementById('edit-item-modal').style.display = 'none';
+                renderItemList();
+            }
+        });
+
+        document.getElementById('cancel-item-edit-btn').addEventListener('click', () => {
+            document.getElementById('edit-item-modal').style.display = 'none';
+            editingItemName = null;
+        });
+
+        function downloadItemPdf(itemName) {
+            const item = itemCatalog.find(i => i.name === itemName);
+            if (!item) return;
+
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            let y = 15;
+
+            doc.setFontSize(22);
+            doc.text(item.name, 15, y);
+            y += 10;
+
+            doc.setFontSize(12);
+            doc.text(`Nível: ${item.level} | Categoria: ${item.category} | Usos: ${item.uses} | Bônus: +${item.bonus}D6`, 15, y);
+            y += 10;
+            
+            doc.text("História:", 15, y);
+            y += 5;
+            const historyText = doc.splitTextToSize(item.history, 180);
+            doc.text(historyText, 15, y);
+            y += historyText.length * 5 + 5;
+            
+            doc.text("Efeito:", 15, y);
+            y += 5;
+            const effectText = doc.splitTextToSize(item.effect, 180);
+            doc.text(effectText, 15, y);
+            
+            doc.save(`${item.name}.pdf`);
+        }
+
+        document.getElementById('search-item').addEventListener('keyup', renderItemList);
+        document.getElementById('filter-level').addEventListener('change', renderItemList);
+        document.getElementById('filter-category').addEventListener('change', renderItemList);
+
+        document.getElementById('generate-item-btn').addEventListener('click', generateItem);
+        document.getElementById('add-item-to-catalog-btn').addEventListener('click', addItemToCatalog);
+        
+        window.onload = initializeCatalog;
+    </script>
+</body>
+</html>

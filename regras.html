@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Livro de Regras - Alfa: O Despertar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #2b2f3a, #1a1e27);
+            color: #e2e8f0;
+            padding: 2rem;
+        }
+        .container {
+            background: rgba(45, 55, 72, 0.7);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            max-width: 900px;
+            margin: 2rem auto;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .header-content h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #fbd38d;
+            text-shadow: 0 0 8px rgba(251, 211, 141, 0.4);
+        }
+        .nav-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            background-color: #4a5568;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        .nav-button:hover {
+            background-color: #fbd38d;
+            color: #2d3748;
+            transform: translateY(-2px);
+        }
+        h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #fbd38d;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 0.5rem;
+        }
+        h3 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #cbd5e0;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+        p, li {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        ul, ol {
+            margin-bottom: 1rem;
+            margin-left: 1.5rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            background-color: #4a5568;
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 0.75rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: left;
+        }
+        th {
+            background-color: #2d3748;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-content">
+            <h1>Livro de Regras</h1>
+            <a href="index.html" class="nav-button">Voltar ao Início</a>
+        </div>
+        
+        <h2>Índice</h2>
+        <ul>
+            <li><a href="#introducao" class="text-indigo-300 hover:text-indigo-500">Introdução</a></li>
+            <li><a href="#criacao-personagem" class="text-indigo-300 hover:text-indigo-500">Capítulo 1: Criação de Personagem</a></li>
+            <li><a href="#mecanicas-jogo" class="text-indigo-300 hover:text-indigo-500">Capítulo 2: Mecânicas de Jogo</a></li>
+            <li><a href="#combate" class="text-indigo-300 hover:text-indigo-500">Capítulo 3: Combate</a></li>
+            <li><a href="#evolucao-xp" class="text-indigo-300 hover:text-indigo-500">Capítulo 4: Evolução e Experiência</a></li>
+            <li><a href="#equipamentos-itens" class="text-indigo-300 hover:text-indigo-500">Capítulo 5: Equipamentos e Itens</a></li>
+            <li><a href="#bestiario" class="text-indigo-300 hover:text-indigo-500">Capítulo 6: Bestiário</a></li>
+            <li><a href="#guia-mestre" class="text-indigo-300 hover:text-indigo-500">Capítulo 7: O Guia do Mestre</a></li>
+            <li><a href="#apendices" class="text-indigo-300 hover:text-indigo-500">Apêndices</a></li>
+        </ul>
+
+        <h2 id="introducao">Introdução</h2>
+        <h3>Boas-vindas a "Alfa - O Despertar"</h3>
+        <p>Bem-vindo a "Alfa - O Despertar"! Este é um sistema de RPG de mesa genérico, projetado para ser adaptável a qualquer cenário que sua imaginação conceber. A mecânica central é única e gira em torno do número 6. Neste universo, as capacidades e a própria identidade do seu personagem são refletidas em uma "tela de status", um conceito que será familiar aos fãs do gênero isekai.</p>
+        <h3>Modos de Jogo</h3>
+        <ul>
+            <li><strong>Modo One-Shot (Partida Rápida):</strong> Ideal para aventuras únicas ou jogos mais heroicos. Neste modo, os personagens iniciam cada sessão com 6 Pontos de Sorte (PS).</li>
+            <li><strong>Modo Campanha (Jornada Épica):</strong> Projetado para histórias longas, com um desenvolvimento de personagem mais gradual e desafiador. Neste modo, os personagens são criados com apenas 1 Ponto de Sorte (PS).</li>
+        </ul>
+
+        <h2 id="criacao-personagem">Capítulo 1: Criação de Personagem</h2>
+        <h3>1.1. Conceito e Identidade</h3>
+        <p>Tudo começa com uma ideia. Defina um nome, história e arquétipo para o seu personagem.</p>
+        <h3>1.2. Atributos Fundamentais</h3>
+        <ul>
+            <li><strong>Pontos de Vida (PV):</strong> Representam sua vitalidade. Todo personagem começa com 6 PV.</li>
+            <li><strong>Pontos de Sorte (PS):</strong> Recurso consumível, com limite máximo de 6.</li>
+            <li><strong>Pontos de Experiência (XP):</strong> A "moeda" usada para aprimorar seu personagem.</li>
+        </ul>
+        <h3>1.3. Árvores de Habilidade</h3>
+        <p>Você começa com 3 Árvores de Habilidade desbloqueadas (Ataque, Defesa, Suporte), cada uma com uma Habilidade Inicial de Nível 1. Um personagem pode ter no máximo 6 Árvores de Habilidade. Os 3 espaços adicionais podem ser desbloqueados posteriormente através da Loja de XP.</p>
+
+        <h2 id="mecanicas-jogo">Capítulo 2: Mecânicas de Jogo</h2>
+        <h3>2.1. A Rolagem de Dados</h3>
+        <p>Para usar uma habilidade, role D6s igual ao nível da habilidade. O sucesso é obtido com um '6'.</p>
+        <ul>
+            <li><strong>Sucesso:</strong> Pelo menos um '6'.</li>
+            <li><strong>Falha:</strong> Nenhum '6' e menos da metade '1's.</li>
+            <li><strong>Sucesso Crítico:</strong> Metade ou mais dos dados rolados resultam em '6'.</li>
+            <li><strong>Falha Crítica:</strong> Ocorre quando metade ou mais dos dados rolados resultam em '1' (e nenhum '6' é obtido).</li>
+        </ul>
+        <h3>2.2. O Poder da Sorte</h3>
+        <p>Gaste 1 PS para rerrolar um dado, anular uma falha crítica ou elevar um sucesso normal a crítico.</p>
+        <h4>Recuperando Pontos de Sorte</h4>
+        <p>Existem duas maneiras de recuperar 1 Ponto de Sorte:</p>
+        <ul>
+            <li><strong>Sucesso Crítico Perfeito:</strong> A partir do Nível 3, se em uma rolagem de habilidade todos os dados resultarem em '6'.</li>
+            <li><strong>Prêmio do Mestre:</strong> Concedido por uma ação excepcionalmente criativa.</li>
+        </ul>
+        <h3>2.3. Testes Genéricos</h3>
+        <p>Para ações não listadas, use a sua afinidade com uma das três categorias principais.</p>
+        <h3>2.4. Condições Temporárias</h3>
+        <p>Condições como Atordoado, Envenenado, etc., alteram temporariamente o desempenho do personagem.</p>
+
+        <h2 id="combate">Capítulo 3: Combate</h2>
+        <h3>3.1. Ordem de Batalha (Iniciativa)</h3>
+        <p>Determinada narrativamente pelo Mestre ou por rolagem de dados (1D6).</p>
+        <h3>3.2. Ações no Turno</h3>
+        <p>Um personagem pode realizar 1 Ação e 1 Reação por turno.</p>
+        <h3>3.3. Dano e Defesa</h3>
+        <p>Cada '6' numa rolagem de ataque causa 1 de dano. Habilidades de defesa podem ser usadas como Reação para reduzir ou anular dano.</p>
+
+        <h2 id="evolucao-xp">Capítulo 4: Evolução e Experiência</h2>
+        <h3>4.1. Nível do Personagem</h3>
+        <p>Ganha-se um nível quando uma árvore de habilidade é completada (nível 6). Cada nível concede +2 PV e +1 PS.</p>
+        <h3>4.2. Evolução Natural de Habilidades</h3>
+        <p>Um sucesso numa habilidade de nível N cria a habilidade de nível N+1, até ao nível 6.</p>
+        <h3>4.3. Características Adicionais</h3>
+        <p>Obtém-se com um Sucesso Crítico com uma habilidade de Nível 3 ou superior. Uma habilidade pode ter até 3 características.</p>
+        <h3>4.4. Ganhando Pontos de Experiência (XP)</h3>
+        <p>O Mestre concede XP por derrotar inimigos e por progressão na história e criatividade.</p>
+
+        <h2 id="equipamentos-itens">Capítulo 5: Equipamentos e Itens</h2>
+        <h3>5.1. Regras Gerais de Itens</h3>
+        <p>Itens têm um número limitado de "Usos" e só podem ser usados por personagens de nível igual ou inferior ao seu.</p>
+        <h3>5.2. Catálogo de Itens</h3>
+        <p>O livro apresenta exemplos de itens de Ataque, Defesa e Suporte.</p>
+
+        <h2 id="bestiario">Capítulo 6: Bestiário</h2>
+        <h3>6.1. Entendendo a Ficha de Monstro</h3>
+        <p>Cada monstro tem Nível, Categoria, Papel de Combate, PV/PS e um conjunto de habilidades.</p>
+        <h3>6.2. Regra de Experiência (XP) por Monstro</h3>
+        <p>O XP é calculado com base no número e nível médio dos monstros.</p>
+
+        <h2 id="guia-mestre">Capítulo 7: O Guia do Mestre</h2>
+        <h3>7.1. A Filosofia do Jogo</h3>
+        <p>Foca na narrativa, recompensa a criatividade e incentiva o Mestre a ser "fã" dos personagens.</p>
+        <h3>7.2. Como Criar Aventuras</h3>
+        <p>Sugere estruturas para aventuras curtas (One-Shot) e longas (Campanha).</p>
+        <h3>7.3. Balanceamento de Combate</h3>
+        <p>Usa o Nível de Encontro Sugerido (NES) para equilibrar a dificuldade dos combates.</p>
+
+        <h2 id="apendices">Apêndices</h2>
+        <p>Inclui fichas de jogo, geradores de monstros e itens, e um glossário de termos.</p>
+    </div>
+</body>
+</html>
+

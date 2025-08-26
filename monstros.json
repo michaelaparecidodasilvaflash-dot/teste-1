@@ -1,0 +1,68 @@
+[
+    {
+        "name": "Rato Faminto",
+        "level": 1,
+        "category": "Animal",
+        "role": "Lacaio / Combatente",
+        "pv": "1-3",
+        "ps": "1",
+        "cd": 1,
+        "lore": "Um rato comum, mas com um brilho faminto e desesperado nos olhos. Ataca qualquer coisa que se mova, não por territorialismo, mas por uma fome que nunca cessa.",
+        "abilities": "Ataque: Mordida Faminta (1D6) - Causa 1 dano. Se sair 6, aplica Sangramento (1 dano/turno por 2 turnos). Defesa: Fuga Ágil (1D6) - Ignora todo o dano se sair 6. Suporte: Cheiro Repulsivo (1D6) - Inimigos em 3m sofrem -1 dado em ataques no próximo turno se sair 5-6."
+    },
+    {
+        "name": "Lesma Ácida",
+        "level": 1,
+        "category": "Monstruosidade",
+        "role": "Controlador",
+        "pv": "1-3",
+        "ps": "1",
+        "cd": 1,
+        "lore": "Uma lesma de tamanho incomum, com um brilho esverdeado e um rastro pegajoso e borbulhante.",
+        "abilities": "Ataque: Gosma Corrosiva (1D6) - Causa 1 dano. Se sair 6, reduz 1 dado de defesa do alvo até o fim do combate. Defesa: Camada Protetora (1D6) - Reduz 1 de dano físico. Suporte: Rastro Tóxico (1D6) - Cria uma área de veneno (1 dano/turno) se sair 6."
+    },
+    {
+        "name": "Morcego Sombra",
+        "level": 1,
+        "category": "Animal",
+        "role": "Combatente (Skirmisher)",
+        "pv": "3",
+        "ps": "1",
+        "cd": 1,
+        "lore": "Um morcego grande com asas escuras e olhos que brilham fracamente, conhecido por seus voos silenciosos.",
+        "abilities": "Ataque: Mordida Sanguessuga (1D6) - Causa 1 dano. Se sair 6, cura 1 PV. Defesa: Voo Noturno (1D6) - Esquiva um ataque e move-se 3m se sair 6. Suporte: Eco Sônico (1D6) - Aplica Atordoado (-1 dado) em 1 alvo se sair 5-6."
+    },
+    {
+        "name": "Fogo-Fátuo",
+        "level": 1,
+        "category": "Elemental",
+        "role": "Controlador",
+        "pv": "2",
+        "ps": "1",
+        "cd": 1,
+        "lore": "Uma pequena esfera de luz bruxuleante, com um calor sutil, capaz de confundir aqueles que a perseguem.",
+        "abilities": "Ataque: Chama Fantasma (1D6) - Causa 1 dano de fogo. Se sair 6, aplica Queimando (1 dano/turno). Defesa: Forma Etérea (1D6) - Ignora dano físico se sair 5-6. Suporte: Ilusão Macabra (1D6) - Confunde 1 alvo (perde ação) se sair 6."
+    },
+    {
+        "name": "Goblinzinho",
+        "level": 1,
+        "category": "Humanoide",
+        "role": "Lacaio / Combatente",
+        "pv": "1",
+        "ps": "1",
+        "cd": 1,
+        "lore": "Um goblin pequeno e ágil, com um sorriso astuto e uma adaga enferrujada, sempre pronto para uma travessura ou um roubo.",
+        "abilities": "Ataque: Adaga Sorrateira (1D6) - Causa 1 dano. Se sair 6, rouba 1 item pequeno. Defesa: Camuflagem (1D6) - Fica Invisível até o próximo turno se sair 6. Suporte: Granada de Fumaça (1D6) - Cria névoa (-2 dados de precisão) se sair 6."
+    },
+    {
+        "name": "Dragão Ancião",
+        "level": 6,
+        "category": "Monstruosidade",
+        "role": "Bruto / Artilharia / Líder",
+        "pv": "8",
+        "ps": "6",
+        "cd": 6,
+        "lore": "Um dragão milenar e colossal, com escamas que refletem as eras e um sopro elemental capaz de obliterar paisagens.",
+        "abilities": "Ataque: Sopro Primordial (6D6) - Escolha 2 elementos. Dano em cone (15m). Cada 6 causa 1 dano duplo + efeito. Defesa: Escamas do Tempo (6D6) - Reverte dano recebido para cura. Ignora críticos. Suporte: Ascensão Cósmica (6D6) - Voa para a estratosfera e bombardeia área com meteoros (3d6 de dano)."
+    }
+]

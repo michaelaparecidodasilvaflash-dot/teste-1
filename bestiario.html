@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bestiário - Alfa: O Despertar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #2b2f3a, #1a1e27);
+            color: #e2e8f0;
+            padding: 2rem;
+        }
+        .container {
+            background: rgba(45, 55, 72, 0.7);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            max-width: 900px;
+            margin: 2rem auto;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .header-content h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #fbd38d;
+            text-shadow: 0 0 8px rgba(251, 211, 141, 0.4);
+        }
+        .nav-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            background-color: #4a5568;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        .nav-button:hover {
+            background-color: #fbd38d;
+            color: #2d3748;
+            transform: translateY(-2px);
+        }
+        .generator-section, .filters-section {
+            margin-top: 2rem;
+            background-color: #2d3748;
+            padding: 2rem;
+            border-radius: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .generator-section h2, .filters-section h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #fbd38d;
+            margin-bottom: 1rem;
+        }
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #1a202c;
+            border: 1px solid #4a5568;
+            border-radius: 0.5rem;
+            color: #e2e8f0;
+        }
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        .generate-button {
+            background-color: #38b2ac;
+            color: white;
+            padding: 0.75rem 2rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            cursor: pointer;
+        }
+        .generate-button:hover {
+            background-color: #319795;
+        }
+        .monster-list {
+            display: grid;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        .monster-card {
+            background-color: #4a5568;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .monster-card h3 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            color: #fbd38d;
+            margin-bottom: 0.5rem;
+        }
+        .monster-card p {
+            margin-bottom: 0.5rem;
+        }
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #fbd38d;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .collapsible-header {
+            font-family: 'Cinzel', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #fbd38d;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .collapsible-content {
+            display: none;
+            overflow: hidden;
+            transition: max-height 0.3s ease-in-out;
+        }
+        .collapsible-content.active {
+            display: grid;
+            gap: 1.5rem;
+        }
+        .monster-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 0.5rem;
+            object-fit: cover;
+            margin-bottom: 1rem;
+            align-self: center;
+        }
+        .monster-details {
+            display: flex;
+            gap: 1.5rem;
+            flex-direction: column;
+        }
+        @media (min-width: 768px) {
+            .monster-details {
+                flex-direction: row;
+            }
+             .monster-image {
+                margin-bottom: 0;
+            }
+        }
+        .details-text {
+            flex: 1;
+        }
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); z-index: 1000;
+            display: none; justify-content: center; align-items: center;
+        }
+        .modal-content {
+            background: #2d3748; border-radius: 12px;
+            padding: 24px; width: 90%; max-width: 600px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-content h3 {
+            font-family: 'Cinzel', serif;
+            color: #fbd38d;
+            margin-top: 0;
+            margin-bottom: 1rem;
+        }
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-content">
+            <h1>Bestiário</h1>
+            <a href="index.html" class="nav-button">Voltar ao Início</a>
+        </div>
+        
+        <div class="generator-section">
+            <h2>Gerador de Monstros</h2>
+            <div class="input-group">
+                <label for="monster-description">Descrição do Monstro:</label>
+                <textarea id="monster-description" placeholder="Ex: Um golem de pedra coberto de musgo com um olho brilhante e um ataque de veneno."></textarea>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="input-group">
+                    <label for="monster-level">Nível do Monstro (1-6):</label>
+                    <select id="monster-level">
+                        <option value="1">Nível 1</option>
+                        <option value="2">Nível 2</option>
+                        <option value="3">Nível 3</option>
+                        <option value="4">Nível 4</option>
+                        <option value="5">Nível 5</option>
+                        <option value="6">Nível 6</option>
+                    </select>
+                </div>
+                 <div class="input-group">
+                    <label for="monster-image-upload">Imagem do Monstro (opcional):</label>
+                    <input type="file" id="monster-image-upload" accept="image/*" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-gray-700 file:text-fbd38d hover:file:bg-gray-600">
+                </div>
+            </div>
+            <button id="generate-monster-btn" class="generate-button">Gerar Monstro</button>
+            <div id="loading-area" class="mt-4" style="display: none;">
+                <div class="loading-spinner"></div>
+                <p class="text-sm mt-2 text-gray-400">Gerando monstro, aguarde...</p>
+            </div>
+        </div>
+
+        <div id="generated-monster-section" style="display: none;">
+            <h2 class="mt-8">Monstro Gerado</h2>
+            <div id="monster-output" class="monster-card">
+                </div>
+            <button id="add-to-catalog-btn" class="generate-button mt-4">Adicionar ao Catálogo</button>
+        </div>
+
+        <div class="filters-section">
+            <h2>Catálogo de Monstros</h2>
+             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="input-group">
+                    <label for="search-monster">Buscar por Nome</label>
+                    <input type="text" id="search-monster" placeholder="Ex: Dragão...">
+                </div>
+                <div class="input-group">
+                    <label for="filter-monster-level">Filtrar por Nível</label>
+                    <select id="filter-monster-level">
+                        <option value="">Todos</option>
+                        <option value="1">Nível 1</option>
+                        <option value="2">Nível 2</option>
+                        <option value="3">Nível 3</option>
+                        <option value="4">Nível 4</option>
+                        <option value="5">Nível 5</option>
+                        <option value="6">Nível 6</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div id="monster-catalog">
+            </div>
+    </div>
+    
+    <div id="edit-monster-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h3>Editar Monstro</h3>
+            <div class="input-group">
+                <label for="edit-name">Nome:</label>
+                <input type="text" id="edit-name" class="w-full p-2 bg-gray-700 rounded">
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="input-group">
+                    <label for="edit-level">Nível:</label>
+                    <input type="number" id="edit-level" min="1" max="6" class="w-full p-2 bg-gray-700 rounded">
+                </div>
+                <div class="input-group">
+                    <label for="edit-cd">CD:</label>
+                    <input type="number" id="edit-cd" min="1" max="6" class="w-full p-2 bg-gray-700 rounded">
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="input-group">
+                    <label for="edit-pv">PV:</label>
+                    <input type="text" id="edit-pv" class="w-full p-2 bg-gray-700 rounded">
+                </div>
+                <div class="input-group">
+                    <label for="edit-ps">PS:</label>
+                    <input type="text" id="edit-ps" class="w-full p-2 bg-gray-700 rounded">
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="input-group">
+                    <label for="edit-category">Categoria:</label>
+                    <input type="text" id="edit-category" class="w-full p-2 bg-gray-700 rounded">
+                </div>
+                <div class="input-group">
+                    <label for="edit-role">Papel:</label>
+                    <input type="text" id="edit-role" class="w-full p-2 bg-gray-700 rounded">
+                </div>
+            </div>
+            <div class="input-group">
+                <label for="edit-lore">Lore:</label>
+                <textarea id="edit-lore" class="w-full p-2 bg-gray-700 rounded"></textarea>
+            </div>
+            <div class="input-group">
+                <label for="edit-abilities">Habilidades:</label>
+                <textarea id="edit-abilities" class="w-full p-2 bg-gray-700 rounded"></textarea>
+            </div>
+            <div class="input-group">
+                <label for="edit-image-upload">Mudar Imagem (opcional):</label>
+                <input type="file" id="edit-image-upload" accept="image/*" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-gray-700 file:text-fbd38d hover:file:bg-gray-600">
+            </div>
+            <div class="modal-actions">
+                <button id="save-edit-btn" class="generate-button">Salvar</button>
+                <button id="cancel-edit-btn" class="generate-button bg-gray-600">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let monsterCatalog = [];
+        let generatedMonsterData = null;
+        let editingMonsterName = null;
+
+        async function initializeCatalog() {
+            const localData = localStorage.getItem('monsterCatalog');
+            if (localData) {
+                monsterCatalog = JSON.parse(localData);
+            } else {
+                try {
+                    const response = await fetch('monstros.json');
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const data = await response.json();
+                    console.log("Monstros carregados com sucesso:", data); // Para depuração
+                    monsterCatalog = data;
+                    localStorage.setItem('monsterCatalog', JSON.stringify(monsterCatalog));
+                } catch (error) {
+                    console.error("Não foi possível carregar o catálogo de monstros do JSON:", error);
+                    document.getElementById('monster-catalog').innerHTML = `<p class="text-red-400 text-center mt-8">Erro ao carregar monstros. Verifique o console (F12) para mais detalhes.</p>`;
+                }
+            }
+            renderMonsterList();
+        }
+        
+        function renderMonsterList() {
+            const listContainer = document.getElementById('monster-catalog');
+            listContainer.innerHTML = ''; 
+            
+            const searchTerm = document.getElementById('search-monster').value.toLowerCase();
+            const selectedLevel = document.getElementById('filter-monster-level').value;
+
+            const filteredMonsters = monsterCatalog.filter(monster => {
+                const matchesSearch = monster.name.toLowerCase().includes(searchTerm);
+                const matchesLevel = !selectedLevel || monster.level == selectedLevel;
+                return matchesSearch && matchesLevel;
+            });
+
+            const monstersByLevel = filteredMonsters.reduce((acc, monster) => {
+                acc[monster.level] = acc[monster.level] || [];
+                acc[monster.level].push(monster);
+                return acc;
+            }, {});
+
+            if (Object.keys(monstersByLevel).length === 0) {
+                 listContainer.innerHTML = `<p class="text-center text-gray-400 mt-8">Nenhum monstro encontrado com os filtros selecionados.</p>`;
+                 return;
+            }
+
+            Object.keys(monstersByLevel).sort((a, b) => a - b).forEach(level => {
+                const levelSection = document.createElement('div');
+                levelSection.className = 'collapsible-header';
+                levelSection.innerHTML = `<h3>Nível ${level}</h3><span>▼</span>`;
+                
+                const levelMonstersList = document.createElement('div');
+                levelMonstersList.className = 'collapsible-content monster-list';
+
+                monstersByLevel[level].forEach(monster => {
+                    const monsterCard = document.createElement('div');
+                    monsterCard.className = 'monster-card';
+                    monsterCard.innerHTML = `
+                        <div class="monster-details">
+                            <img src="${monster.image || 'https://placehold.co/150x150'}" alt="Imagem do monstro ${monster.name}" class="monster-image">
+                            <div class="details-text">
+                                <h4 class="font-bold text-lg text-fbd38d">${monster.name}</h4>
+                                <p class="text-sm text-gray-300"><strong>Categoria:</strong> ${monster.category} | <strong>Papel:</strong> ${monster.role}</p>
+                                <p class="text-sm text-gray-300"><strong>PV:</strong> ${monster.pv} | <strong>PS:</strong> ${monster.ps} | <strong>CD:</strong> ${monster.level}</p>
+                                <p class="text-xs mt-2 text-gray-400"><strong>Lore:</strong> ${monster.lore}</p>
+                                <p class="text-xs mt-2 text-gray-400"><strong>Habilidades:</strong> ${monster.abilities}</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-2 mt-4">
+                            <button class="generate-button" onclick="editMonster('${monster.name}')">Editar</button>
+                            <button class="generate-button bg-blue-500" onclick="downloadMonsterPdf('${monster.name}')">Baixar PDF</button>
+                        </div>
+                    `;
+                    levelMonstersList.appendChild(monsterCard);
+                });
+                
+                listContainer.appendChild(levelSection);
+                listContainer.appendChild(levelMonstersList);
+
+                levelSection.addEventListener('click', () => {
+                    levelMonstersList.classList.toggle('active');
+                    levelSection.querySelector('span').innerText = levelMonstersList.classList.contains('active') ? '▲' : '▼';
+                });
+            });
+        }
+        
+        async function generateMonster() {
+            // *** CORREÇÃO: Função de IA temporariamente desativada para evitar erros. ***
+            alert("A funcionalidade de gerar monstros com IA está temporariamente desativada. Para reativá-la, insira uma chave de API válida no código do arquivo bestiario.html.");
+            return;
+
+            /* CÓDIGO ORIGINAL (COMENTADO)
+            const description = document.getElementById('monster-description').value;
+            const level = document.getElementById('monster-level').value;
+            // ... (resto do código da API) ...
+            */
+        }
+        
+        function addToCatalog() {
+            if (generatedMonsterData) {
+                if (monsterCatalog.some(m => m.name.toLowerCase() === generatedMonsterData.name.toLowerCase())) {
+                    alert('Um monstro com este nome já existe no catálogo.');
+                    return;
+                }
+                monsterCatalog.push(generatedMonsterData);
+                localStorage.setItem('monsterCatalog', JSON.stringify(monsterCatalog));
+                alert('Monstro adicionado ao catálogo!');
+                
+                generatedMonsterData = null;
+                document.getElementById('generated-monster-section').style.display = 'none';
+                renderMonsterList();
+            }
+        }
+        
+        function editMonster(name) {
+            const monster = monsterCatalog.find(m => m.name === name);
+            if (!monster) return;
+
+            editingMonsterName = name;
+            document.getElementById('edit-name').value = monster.name;
+            document.getElementById('edit-level').value = monster.level;
+            document.getElementById('edit-pv').value = monster.pv;
+            document.getElementById('edit-ps').value = monster.ps;
+            document.getElementById('edit-cd').value = monster.cd;
+            document.getElementById('edit-category').value = monster.category;
+            document.getElementById('edit-role').value = monster.role;
+            document.getElementById('edit-lore').value = monster.lore;
+            document.getElementById('edit-abilities').value = monster.abilities;
+            
+            document.getElementById('edit-monster-modal').style.display = 'flex';
+        }
+        
+        document.getElementById('save-edit-btn').addEventListener('click', () => {
+            const monsterIndex = monsterCatalog.findIndex(m => m.name === editingMonsterName);
+            if (monsterIndex === -1) return;
+
+            const updatedMonster = {
+                name: document.getElementById('edit-name').value,
+                level: parseInt(document.getElementById('edit-level').value),
+                pv: document.getElementById('edit-pv').value,
+                ps: document.getElementById('edit-ps').value,
+                cd: parseInt(document.getElementById('edit-cd').value),
+                category: document.getElementById('edit-category').value,
+                role: document.getElementById('edit-role').value,
+                lore: document.getElementById('edit-lore').value,
+                abilities: document.getElementById('edit-abilities').value,
+            };
+            
+            const imageFile = document.getElementById('edit-image-upload').files[0];
+            if (imageFile) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    updatedMonster.image = e.target.result;
+                    monsterCatalog[monsterIndex] = updatedMonster;
+                    localStorage.setItem('monsterCatalog', JSON.stringify(monsterCatalog));
+                    document.getElementById('edit-monster-modal').style.display = 'none';
+                    renderMonsterList();
+                };
+                reader.readAsDataURL(imageFile);
+            } else {
+                updatedMonster.image = monsterCatalog[monsterIndex].image;
+                monsterCatalog[monsterIndex] = updatedMonster;
+                localStorage.setItem('monsterCatalog', JSON.stringify(monsterCatalog));
+                document.getElementById('edit-monster-modal').style.display = 'none';
+                renderMonsterList();
+            }
+        });
+
+        document.getElementById('cancel-edit-btn').addEventListener('click', () => {
+            document.getElementById('edit-monster-modal').style.display = 'none';
+            editingMonsterName = null;
+        });
+
+        function downloadMonsterPdf(monsterName) {
+            const monster = monsterCatalog.find(m => m.name === monsterName);
+            if (!monster) return;
+
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            let y = 15;
+
+            doc.setFontSize(22);
+            doc.text(monster.name, 15, y);
+            y += 10;
+
+            doc.setFontSize(12);
+            doc.text(`Nível: ${monster.level} | PV: ${monster.pv} | PS: ${monster.ps} | CD: ${monster.cd}`, 15, y);
+            y += 10;
+            doc.text(`Categoria: ${monster.category} | Papel: ${monster.role}`, 15, y);
+            y += 10;
+            
+            doc.text("Lore:", 15, y);
+            y += 5;
+            const loreText = doc.splitTextToSize(monster.lore, 180);
+            doc.text(loreText, 15, y);
+            y += loreText.length * 5 + 5;
+            
+            doc.text("Habilidades:", 15, y);
+            y += 5;
+            const abilitiesText = doc.splitTextToSize(monster.abilities, 180);
+            doc.text(abilitiesText, 15, y);
+            
+            doc.save(`${monster.name}.pdf`);
+        }
+        
+        document.getElementById('search-monster').addEventListener('keyup', renderMonsterList);
+        document.getElementById('filter-monster-level').addEventListener('change', renderMonsterList);
+
+        document.getElementById('generate-monster-btn').addEventListener('click', generateMonster);
+        document.getElementById('add-to-catalog-btn').addEventListener('click', addToCatalog);
+        
+        window.onload = initializeCatalog;
+    </script>
+</body>
+</html>

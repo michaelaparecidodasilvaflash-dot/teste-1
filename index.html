@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alfa: O Despertar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #2b2f3a, #1a1e27);
+            color: #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+            padding: 2rem;
+        }
+        .container {
+            background: rgba(45, 55, 72, 0.7);
+            backdrop-filter: blur(10px);
+            padding: 3.5rem 2.5rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .title {
+            font-family: 'Cinzel', serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: #fbd38d;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 10px rgba(251, 211, 141, 0.6);
+        }
+        .subtitle {
+            font-size: 1.25rem;
+            color: #b0c4de;
+            margin-bottom: 3rem;
+            font-style: italic;
+        }
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 2rem;
+        }
+        .nav-button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            background: linear-gradient(45deg, #4a5568, #2d3748);
+            color: #fff;
+            font-size: 1.25rem;
+            font-weight: 600;
+            border-radius: 1rem;
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            text-decoration: none;
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        .nav-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300%;
+            height: 300%;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.7s ease-out;
+            transform: translate(-50%, -50%) rotate(45deg) scale(0);
+        }
+        .nav-button:hover::before {
+            transform: translate(-50%, -50%) rotate(45deg) scale(1);
+        }
+        .nav-button:hover {
+            transform: translateY(-8px);
+            background: linear-gradient(45deg, #fbd38d, #f6e0b5);
+            color: #2d3748;
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
+        }
+        .nav-button-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.75rem;
+            color: #fbd38d;
+            transition: color 0.4s;
+        }
+        .nav-button:hover .nav-button-icon {
+            color: #2d3748;
+        }
+    </style>
+    <!-- Incluindo Font Awesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Alfa: O Despertar</h1>
+        <p class="subtitle">Seja bem-vindo(a) ao mundo da sua aventura!</p>
+        <div class="button-grid">
+            <a href="ficha.html" class="nav-button">
+                <i class="fas fa-scroll nav-button-icon"></i>
+                Ficha de Personagem
+            </a>
+            <a href="regras.html" class="nav-button">
+                <i class="fas fa-book nav-button-icon"></i>
+                Livro de Regras
+            </a>
+            <a href="loja.html" class="nav-button">
+                <i class="fas fa-gem nav-button-icon"></i>
+                Loja de Itens
+            </a>
+            <a href="bestiario.html" class="nav-button">
+                <i class="fas fa-dragon nav-button-icon"></i>
+                Bestiário
+            </a>
+        </div>
+    </div>
+</body>
+</html>
+
